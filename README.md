@@ -15,3 +15,11 @@ Follow guide here: <https://grpc.io/docs/protoc-installation/>
 ```sh
 export PATH="$PATH:$(go env GOPATH)/bin"
 ```
+
+### Start grpc server
+
+go run ./server
+
+### Start grpc client (sample) as a separate process
+
+go run ./client

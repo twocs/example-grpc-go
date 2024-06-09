@@ -90,6 +90,6 @@ func (s *server) ListUsers(ids *pb.IDs, lus pb.GetUsers_ListUsersServer) error {
 
 // TODO:
 // Implement the SearchUsers method.
-func (s *server) SearchUsers(query *pb.Query, s pb.GetUsers_SearchUsersServer) error {
+func (s *server) SearchUsers(query *pb.Query, sus pb.GetUsers_SearchUsersServer) error {
 	return status.Errorf(codes.Unimplemented, "method SearchUsers not implemented")
 }
