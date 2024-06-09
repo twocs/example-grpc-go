@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+option go_package = "github.com/twocs/example-grpc-go";
+option java_multiple_files = true;
+option java_package = "com.github.twocs.example-grpc-go";
+option java_outer_classname = "ExampleGRPCGo";
+
+package example_grpc_go;
+
+// Interface exported by the server.
+service GetUsers {
+  // A simple RPC.
+  //
+  // Obtains the user with a given id.
+  //
+  // A user with an empty name is returned if there's no user at the given
+  // position.
+  rpc GetUser(ID) returns (User) {}
+
+  // A list of users
+  //
+  // Obtains the list of users corresponding to a list of ids. Results are
+  // streamed rather than returned at once (e.g. in a response message with a
+  // repeated field), as the rectangle may cover a large area and contain a
+  // huge number of features.
+  rpc ListUsers(IDs) returns (stream User) {}
+
+  // search endpoint
+  //
+// Obtains the list of users corresponding to a search. Results are
+  // streamed rather than returned at once (e.g. in a response message with a
+  // repeated field), as the rectangle may cover a large area and contain a
+  // huge number of features.
+  rpc SearchUsers(Query) returns (stream User) {}
+}
+
+// User represents a user in the database.
+message User {
+  int32 id = 1;
+  string fname = 2;
+  string city = 3;
+  string phone = 4;
+  string height = 5;
+  bool married = 6;
+}
+
+// ID represents a single ID.
+message ID {
+   int32 id = 1;
+}
+
+// IDs represents a number of IDs.
+message IDs {
+   repeated int32 id = 1;
+}
+
+// Query represents a search term.
+message Query {
+   string query = 1;
+}
