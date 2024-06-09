@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"flag"
+	"io"
 	"log"
 	"strconv"
 	"strings"
@@ -55,4 +56,20 @@ func main() {
 	log.Printf("User: %+v", r)
 
 	// TODO: Contact the server and print out its response (Get multiple users)
+	r2, err := c.ListUsers(ctx, &pb.IDs{Id: ids})
+	if err != nil {
+		log.Fatalf("could not list users: %v", err)
+	}
+
+	for {
+		user, err := r2.Recv()
+		if err == io.EOF {
+			// read done
+			break
+		}
+		if err != nil {
+			log.Fatalf("error in ListUsers - %v", err)
+		}
+		log.Println(user)
+	}
 }
