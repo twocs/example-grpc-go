@@ -73,6 +73,7 @@ func (user *User) PBUser() *pb.User {
 // If a user ID is not found, it is skipped.
 func (s *server) ListUsers(ids *pb.IDs, lus pb.GetUsers_ListUsersServer) error {
 	for _, id := range ids.Id {
+		log.Printf("ListUsers: %v", id)
 		user, err := database.GetUserByID(id)
 		switch {
 		case errors.Is(err, database.ErrUserNotFound):
@@ -88,8 +89,19 @@ func (s *server) ListUsers(ids *pb.IDs, lus pb.GetUsers_ListUsersServer) error {
 	return nil
 }
 
-// TODO:
 // Implement the SearchUsers method.
 func (s *server) SearchUsers(query *pb.Query, sus pb.GetUsers_SearchUsersServer) error {
-	return status.Errorf(codes.Unimplemented, "method SearchUsers not implemented")
+	log.Printf("SearchUsers: %v", query)
+
+	// Initially query will be implemented using Fname.
+	users, err := database.Search(query.Query)
+	if err != nil {
+		return status.Errorf(codes.Internal, "failed to search users: %v", err)
+	}
+	for _, user := range users {
+		if err := sus.Send((*User)(user).PBUser()); err != nil {
+			return status.Errorf(codes.Internal, "failed to send user: %v", err)
+		}
+	}
+	return nil
 }

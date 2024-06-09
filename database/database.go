@@ -24,5 +24,22 @@ func GetUserByID(id int32) (*User, error) {
 	if !ok {
 		return nil, ErrUserNotFound
 	}
+	user.ID = id // Set the ID to the value from the map.
 	return &user, nil
+}
+
+// Search returns a list of users based on the query.
+// No error is returned if no user is found.
+func Search(query string) ([]*User, error) {
+	var users []*User
+	for id, user := range data {
+		if user.Fname == query {
+			user.ID = id // Set the ID to the value from the map.
+			users = append(users, &user)
+		}
+	}
+	if len(users) == 0 {
+		return nil, nil
+	}
+	return users, nil
 }
